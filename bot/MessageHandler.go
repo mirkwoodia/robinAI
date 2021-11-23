@@ -10,7 +10,9 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/mirkwoodia/RobinAI/config"
+	//"github.com/mirkwoodia/RobinAI/config"
+	"robin/config"
+	//"../config"
 )
 
 // This function will be called (due to AddHandler above) every time a new

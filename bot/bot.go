@@ -1,15 +1,15 @@
 package bot
 
 import (
-	//"database/sql"
-
 	"database/sql"
 	"fmt"
 	"log"
 	"regexp"
 
+	"robin/config"
+
 	"github.com/bwmarrin/discordgo"
-	"github.com/mirkwoodia/RobinAI/config"
+	//"github.com/mirkwoodia/RobinAI/config"
 )
 
 var (
@@ -65,12 +65,15 @@ func Start() {
 	// Register guildCreate as a callback for the guildCreate events.
 	dg.AddHandler(GuildCreate)
 
-	// Register guildCreate as a callback for the guildCreate events.
-	dg.AddHandler(MembersUpdate)
+	// Register MembersUpdate as a callback for the MembersUpdate events.
+	dg.AddHandler(GuildMemberUpdate)
+
+	//
+	dg.AddHandler(GuildEmojisUpdate)
 
 	// We need information about guilds (which includes their channels),
 	// messages and voice states.
-	dg.Identify.Intents = discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildEmojis | discordgo.IntentsGuildMembers | discordgo.IntentsAll
+	dg.Identify.Intents = discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildEmojis | discordgo.IntentsGuildMembers | discordgo.IntentsGuildPresences
 
 	err = dg.Open()
 
@@ -85,6 +88,5 @@ func Start() {
 func ErrorCheck(err error) {
 	if err != nil {
 		fmt.Println(err)
-		panic(err.Error())
 	}
 }

@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<p>I'm focusing on backend. To access the emoji stats, append the guild ID to the end of the url</p>
+<p>I'm focusing on backend. To access your servers emoji stats, just find your server id below</p>
 
 <?php
 
@@ -29,6 +29,12 @@ foreach ($tableList as $table) {
 	$guildID = "";
 	if (str_starts_with($table, "emojis_")) {
 		$guildID = str_replace("emojis_", "", $table);
+?>
+		<a href="http://www.robinai.xyz/<?php echo $guildID; ?>">
+    	<input type="submit" value='<?php echo "$guildID"; ?>' name="guildID"/>
+    </a>
+
+<?php
 		echo $guildID;
 		echo "\n";
 		//$path = getcwd();

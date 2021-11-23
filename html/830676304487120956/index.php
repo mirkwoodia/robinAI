@@ -28,6 +28,8 @@ tr:nth-child(even) {
 
 
 <?php
+// Stores the guilds emojis as emojilist[id]->name
+$emojilist = array();
 
 // set key to emoji_ID, value to array. Array will hold emoji_name, 1m, 3m, 6m, 12m
 $data = array();
@@ -35,6 +37,14 @@ $date = strtotime(date("Y-m-d"));
 // This would be better if I turned it all into 1 run, where I take the DOB value, minus it off from currentDate to see how many days ago DOB was
 $stmt = mysqli_stmt_init($conn);
 $guildID = basename(getCwd());
+
+$sql = "SELECT * from emojiGuild_" . $guildID . ";";
+$query=mysqli_query($conn, $sql);
+if(mysqli_num_rows($query)>0) {
+	while($row=mysqli_fetch_object($query)) {
+        $emojilist[$row->emoji_ID] = $row->emoji_name;
+    }
+}
 $sql = "SELECT * from emojis_" . $guildID . ";";
 $query=mysqli_query($conn, $sql);
 if(mysqli_num_rows($query)>0):
@@ -62,6 +72,7 @@ if(mysqli_num_rows($query)>0):
 		}
 	}
 ?>
+
 
 
 <table>
@@ -130,6 +141,28 @@ if(mysqli_num_rows($query)>0):
 // no result show
 else: ?>
 <h3>No Results found.</h3>
-<?php endif; ?>
+<?php endif;
+
+// Remove the used emojis from emojilist, so the unused emojis are left in emojilist.
+foreach ($emojilist as $key => $value) {
+    if (array_key_exists($key, $data)) {
+        unset($emojilist[$key]);
+    }
+}
+?>
+<table>
+    <tr>
+        <th align="center">Emoji ID</td>
+        <th align="center">Emoji Name</td>
+    </tr>
+    <?php if (!empty($emojilist)):
+        foreach($emojilist as $emoji_ID => $emoji_name): ?>
+        <tr>
+        <td align="center"><?php echo $emoji_ID; ?></td>
+        <td align="center"><?php echo $emoji_name; ?></td>
+    </tr>
+    <?php endforeach; ?>
+    <?php endif; ?>
+</table>
 </body>
 </html>
