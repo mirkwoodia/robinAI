@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"log"
 	"regexp"
-
+	"strings"
 	"robin/config"
 
 	"github.com/bwmarrin/discordgo"
-	//"github.com/mirkwoodia/RobinAI/config"
 )
 
 var (
@@ -17,27 +16,23 @@ var (
 	dg                *discordgo.Session
 	Db                *sql.DB
 	Emoji_insert      *sql.Stmt
-	Nonames_insert    *sql.Stmt
 	EmojiStats_insert *sql.Stmt
 	IsAlpha           func(s string) bool
+	ContainsLiterals  *regexp.Regexp
 )
 
 // TODO: do I need to defer the dg close? Is it harming my program?
 func init() {
-	IsAlpha = regexp.MustCompile(`[a-zA-Z]`).MatchString
+	chars := []string{"'", "\""}
+	r := strings.Join(chars, "")
+	ContainsLiterals = regexp.MustCompile("[" + r + "]")
 	Db = Open()
-	// defer dg.Close()
-	// Db.Close()
 }
 
 type Emojistruct struct {
-	emoji_ID   int
+	emoji_ID   string
 	emoji_name string
 	DOB        string // is this an int in sql or some other format. maybe string
-}
-
-type Nonamestruct struct {
-	ID int
 }
 
 func Start() {
@@ -59,17 +54,17 @@ func Start() {
 	// Register ready as a callback for the ready events.
 	dg.AddHandler(Ready)
 
+	// Register guildCreate as a callback for the guildCreate events.
+        dg.AddHandler(GuildCreate)
+
 	// Register messageCreate as a callback for the messageCreate events.
 	dg.AddHandler(MessageHandler)
 
-	// Register guildCreate as a callback for the guildCreate events.
-	dg.AddHandler(GuildCreate)
-
-	// Register MembersUpdate as a callback for the MembersUpdate events.
-	dg.AddHandler(GuildMemberUpdate)
-
-	//
+	// Registers guildEmojisUpdate as a callback for guildEmojiUpdate events
 	dg.AddHandler(GuildEmojisUpdate)
+
+	// Registers guildmemberadd as a callback for guildmemberadd events
+	dg.AddHandler(GuildMemberAdd)
 
 	// We need information about guilds (which includes their channels),
 	// messages and voice states.

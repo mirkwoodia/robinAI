@@ -1,0 +1,5 @@
+
+config/config.json
+config/config.go
+config/go.mod
+bot/db.go

@@ -9,12 +9,9 @@ import (
 
 	"robin/bot"
 	"robin/config"
-	//"github.com/mirkwoodia/RobinAI/bot"
-	//"github.com/mirkwoodia/RobinAI/config"
 )
 
 func main() {
-
 	err := config.ReadConfig()
 
 	if err != nil {
