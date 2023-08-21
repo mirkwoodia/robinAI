@@ -1,5 +1,3 @@
-A bot made by Mirk#6460 (heres my ID, send me a dm maybe say hi 280713802356490241)
-
 Functions:
 - Emoji stat tracking
 - Rename people at the top of the member list with the non-alpha character names
